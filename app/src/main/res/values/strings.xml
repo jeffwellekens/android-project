@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">AndroidProject</string>
+    <string name="deals_title">Deals</string>
+    <string name="games_title">Games</string>
+    <string name="stores_title">Stores</string>
 </resources>
