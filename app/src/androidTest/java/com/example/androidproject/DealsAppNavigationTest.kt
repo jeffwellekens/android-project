@@ -40,4 +40,10 @@ class DealsAppNavigationTest {
         composeTestRule.onNodeWithStringIdTag(R.string.games_title).performClick()
         navController.assertCurrentRouteName(NavigationItem.Games.route)
     }
+
+    @Test
+    fun dealsAppNavHost_clickOnStoresIcon_navigateToGamesScreen() {
+        composeTestRule.onNodeWithStringIdTag(R.string.stores_title).performClick()
+        navController.assertCurrentRouteName(NavigationItem.Stores.route)
+    }
 }

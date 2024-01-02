@@ -5,22 +5,20 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavController
-import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.NavBackStackEntry
+import com.example.androidproject.ui.theme.AppTheme
 
 @Composable
-fun BottomNavigationBar(navController: NavController) {
+fun BottomNavigationBar(navBackStackEntry: NavBackStackEntry?, navigate: (String) -> Unit) {
     val items = listOf(
         NavigationItem.Deals,
         NavigationItem.Games,
         NavigationItem.Stores
     )
     NavigationBar {
-        val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route
         items.forEach { item ->
             NavigationBarItem(
@@ -29,15 +27,7 @@ fun BottomNavigationBar(navController: NavController) {
                 icon = { Icon(item.icon, contentDescription = "navigate to ${item.title.asString()}") },
                 label = { Text(text = item.title.asString()) },
                 onClick = {
-                    navController.navigate(item.route) {
-                        navController.graph.startDestinationRoute?.let { route ->
-                            popUpTo(route) {
-                                saveState = true
-                            }
-                        }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
+                          navigate(item.route)
                 },
             )
         }
