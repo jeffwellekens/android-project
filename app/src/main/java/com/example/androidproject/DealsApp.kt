@@ -1,5 +1,9 @@
 package com.example.androidproject
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -39,10 +43,15 @@ fun DealsApp(navController: NavHostController = rememberNavController()) {
             restoreState = true
         }
     }
+
     val focusManager = LocalFocusManager.current
     Scaffold(
         topBar = {
-            if (navBackStackEntry?.destination?.route == "deals") {
+            AnimatedVisibility(
+                visible = navBackStackEntry?.destination?.route == "deals",
+                enter = fadeIn(tween(700)),
+                exit = fadeOut(tween(700))
+            ) {
                 SearchView(
                     query = dealViewModel.query.value,
                     onQueryChanged = { dealViewModel.query.value = it },

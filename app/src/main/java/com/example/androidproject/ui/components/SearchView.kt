@@ -16,7 +16,6 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,7 +37,7 @@ fun SearchView(
         leadingIcon = {
             Icon(
                 imageVector = Icons.Rounded.Search,
-                tint = MaterialTheme.colorScheme.onBackground,
+                tint = MaterialTheme.colorScheme.surfaceTint,
                 contentDescription = "Search icon"
             )
         },
@@ -48,18 +47,18 @@ fun SearchView(
             }) {
                 Icon(
                     imageVector = Icons.Rounded.Clear,
-                    tint = MaterialTheme.colorScheme.onBackground,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     contentDescription = "Clear text"
                 )
             }
         },
         maxLines = 1,
         colors = TextFieldDefaults.textFieldColors(
-            containerColor = Color.Transparent,
-            textColor = Color.Black
+            containerColor = MaterialTheme.colorScheme.surface,
+            textColor = MaterialTheme.colorScheme.onSurfaceVariant
         ),
-        placeholder = { Text(text = "Search deals") },
-        textStyle = MaterialTheme.typography.headlineSmall,
+        placeholder = { Text(text = "Search deals", color = MaterialTheme.colorScheme.onSurfaceVariant) },
+        textStyle = MaterialTheme.typography.bodyLarge,
         singleLine = true,
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Text,
