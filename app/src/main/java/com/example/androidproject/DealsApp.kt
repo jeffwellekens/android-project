@@ -1,6 +1,7 @@
 package com.example.androidproject
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -14,6 +15,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.example.androidproject.ui.components.SearchView
 import com.example.androidproject.ui.components.navigation.BottomNavigationBar
 import com.example.androidproject.ui.components.navigation.Navigation
 import com.example.androidproject.ui.theme.AppTheme
@@ -38,6 +40,20 @@ fun DealsApp(navController: NavHostController = rememberNavController()) {
     }
 
     Scaffold(
+        topBar = {
+            if (navBackStackEntry?.destination?.route == "deals") {
+                SearchView(
+                    query = dealViewModel.query.value,
+                    onQueryChanged = { dealViewModel.query.value = it },
+                    onClearQuery = {
+                        dealViewModel.query.value = ""
+                        deals.refresh()
+                    },
+                    onSearch = { deals.refresh() },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        },
         bottomBar = { BottomNavigationBar(navBackStackEntry, ::navigate) },
         containerColor = MaterialTheme.colorScheme.background
     ) {
@@ -48,7 +64,6 @@ fun DealsApp(navController: NavHostController = rememberNavController()) {
         }
     }
 }
-
 
 
 @Preview

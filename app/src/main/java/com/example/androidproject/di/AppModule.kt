@@ -5,6 +5,7 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.room.Room
+import com.example.androidproject.data.DealRepository
 import com.example.androidproject.data.local.DealDatabase
 import com.example.androidproject.data.local.DealEntity
 import com.example.androidproject.data.remote.DealRemoteMediator
@@ -51,16 +52,22 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideDealPager(dealDb: DealDatabase, dealService: DealService): Pager<Int, DealEntity> {
-        return Pager(
-            config = PagingConfig(pageSize = 60),
-            remoteMediator = DealRemoteMediator(
-                dealDb = dealDb,
-                dealService = dealService
-            ),
-            pagingSourceFactory = {
-                dealDb.dao.pagingSource()
-            }
-        )
+    fun provideDealRepository(dealDb: DealDatabase, dealService: DealService): DealRepository {
+        return DealRepository(dealService, dealDb)
     }
+//    @Provides
+//    @Singleton
+//    fun provideDealPager(dealDb: DealDatabase, dealService: DealService): Pager<Int, DealEntity> {
+//        return Pager(
+//            config = PagingConfig(pageSize = 60),
+//            remoteMediator = DealRemoteMediator(
+//                dealDb = dealDb,
+//                dealService = dealService
+//            ),
+//            pagingSourceFactory = {
+//                dealDb.dao.pagingSource()
+//            }
+//        )
+//    }
+
 }

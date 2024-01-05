@@ -1,5 +1,7 @@
 package com.example.androidproject.data.remote
 
+import android.util.Log
+import androidx.compose.runtime.MutableState
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
@@ -13,6 +15,7 @@ import java.io.IOException
 
 @OptIn(ExperimentalPagingApi::class)
 class DealRemoteMediator(
+    private val query: MutableState<String>? = null,
     private val dealDb: DealDatabase,
     private val dealService: DealService
 ) : RemoteMediator<Int, DealEntity>() {
@@ -37,10 +40,11 @@ class DealRemoteMediator(
                 }
             }
             val deals = dealService.getDeals(
+                query = query!!.value,
                 pageNumber = loadKey,
                 pageSize = state.config.pageSize
             )
-
+//            Log.d("DealRemoteMediator", query.value)
             dealDb.withTransaction {
                 if (loadType == LoadType.REFRESH) {
                     dealDb.dao.clearAll()
