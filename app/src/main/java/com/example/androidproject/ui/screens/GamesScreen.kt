@@ -1,4 +1,4 @@
-package com.example.androidproject.ui.views
+package com.example.androidproject.ui.screens
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,14 +14,14 @@ import androidx.compose.ui.unit.sp
 import com.example.androidproject.ui.theme.AppTheme
 
 @Composable
-fun StoresScreen() {
+fun GamesScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .wrapContentSize(Alignment.Center)
     ) {
         Text(
-            text = "Stores view",
+            text = "Games view",
             fontWeight = FontWeight.Bold,
             modifier = Modifier.align(Alignment.CenterHorizontally),
             textAlign = TextAlign.Center,
@@ -32,8 +32,8 @@ fun StoresScreen() {
 
 @Preview(showBackground = true)
 @Composable
-fun StoresScreenPreview() {
+fun GamesScreenPreview() {
     AppTheme {
-        StoresScreen()
+        GamesScreen()
     }
 }

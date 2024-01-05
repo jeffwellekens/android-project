@@ -9,17 +9,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.androidproject.ui.components.navigation.BottomNavigationBar
 import com.example.androidproject.ui.components.navigation.Navigation
 import com.example.androidproject.ui.theme.AppTheme
+import com.example.androidproject.ui.viewmodels.DealViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DealsApp(navController: NavHostController = rememberNavController()) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val dealViewModel = hiltViewModel<DealViewModel>()
+    val deals = dealViewModel.dealPagingFlow.collectAsLazyPagingItems()
     fun navigate(route: String) {
         navController.navigate(route) {
             navController.graph.startDestinationRoute?.let { route ->
@@ -39,7 +44,7 @@ fun DealsApp(navController: NavHostController = rememberNavController()) {
         Column(
             modifier = Modifier.padding(paddingValues = it)
         ) {
-            Navigation(navController = navController)
+            Navigation(navController = navController, deals = deals)
         }
     }
 }
