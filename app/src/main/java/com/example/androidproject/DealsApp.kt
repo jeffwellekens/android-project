@@ -9,6 +9,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -38,7 +39,7 @@ fun DealsApp(navController: NavHostController = rememberNavController()) {
             restoreState = true
         }
     }
-
+    val focusManager = LocalFocusManager.current
     Scaffold(
         topBar = {
             if (navBackStackEntry?.destination?.route == "deals") {
@@ -46,10 +47,13 @@ fun DealsApp(navController: NavHostController = rememberNavController()) {
                     query = dealViewModel.query.value,
                     onQueryChanged = { dealViewModel.query.value = it },
                     onClearQuery = {
-                        dealViewModel.query.value = ""
+                        dealViewModel.setQuery("")
                         deals.refresh()
                     },
-                    onSearch = { deals.refresh() },
+                    onSearch = {
+                        deals.refresh()
+                        focusManager.clearFocus()
+                    },
                     modifier = Modifier.fillMaxWidth()
                 )
             }

@@ -18,8 +18,15 @@ class DealViewModel @Inject constructor(
     dealRepository: DealRepository
 ) : ViewModel() {
     var query = mutableStateOf("")
+    fun setQuery(query: String) {
+        this.query.value = query
+    }
+
     val dealPagingFlow = dealRepository.getDeals(query).map { pagingData ->
         pagingData.map { it.toDeal() }
 
     }.cachedIn(viewModelScope)
+
+
+
 }
