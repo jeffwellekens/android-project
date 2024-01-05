@@ -54,8 +54,7 @@ fun DealsScreen(
                         val deal = deals[it]
                         if (deal != null) {
                             DealItem(
-                                deal = deal,
-                                modifier = Modifier.fillMaxWidth()
+                                deal = deal
                             )
                         }
                     }
