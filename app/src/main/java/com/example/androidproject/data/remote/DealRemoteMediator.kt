@@ -44,7 +44,6 @@ class DealRemoteMediator(
                 pageNumber = loadKey,
                 pageSize = state.config.pageSize
             )
-//            Log.d("DealRemoteMediator", query.value)
             dealDb.withTransaction {
                 if (loadType == LoadType.REFRESH) {
                     dealDb.dao.clearAll()

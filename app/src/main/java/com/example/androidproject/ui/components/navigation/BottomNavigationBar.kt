@@ -12,13 +12,13 @@ import androidx.navigation.NavBackStackEntry
 import com.example.androidproject.ui.theme.AppTheme
 
 @Composable
-fun BottomNavigationBar(navBackStackEntry: NavBackStackEntry?, navigate: (String) -> Unit) {
+fun BottomNavigationBar(navBackStackEntry: NavBackStackEntry?, navigate: (String) -> Unit, modifier : Modifier? = Modifier) {
     val items = listOf(
         NavigationItem.Deals,
         NavigationItem.Games,
         NavigationItem.Stores
     )
-    NavigationBar {
+    NavigationBar(modifier = modifier!!) {
         val currentRoute = navBackStackEntry?.destination?.route
         items.forEach { item ->
             NavigationBarItem(

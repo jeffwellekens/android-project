@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -12,8 +13,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -32,6 +36,7 @@ fun DealsApp(navController: NavHostController = rememberNavController()) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val dealViewModel = hiltViewModel<DealViewModel>()
     val deals = dealViewModel.dealPagingFlow.collectAsLazyPagingItems()
+    val currentSearchQuery = remember { mutableStateOf("") }
     fun navigate(route: String) {
         navController.navigate(route) {
             navController.graph.startDestinationRoute?.let { route ->
@@ -56,10 +61,15 @@ fun DealsApp(navController: NavHostController = rememberNavController()) {
                     query = dealViewModel.query.value,
                     onQueryChanged = { dealViewModel.query.value = it },
                     onClearQuery = {
-                        dealViewModel.setQuery("")
-                        deals.refresh()
+                        if (currentSearchQuery.value == "") {
+                            dealViewModel.setQuery("")
+                        } else {
+                            dealViewModel.setQuery("")
+                            deals.refresh()
+                        }
                     },
                     onSearch = {
+                        currentSearchQuery.value = dealViewModel.query.value
                         deals.refresh()
                         focusManager.clearFocus()
                     },
@@ -67,7 +77,13 @@ fun DealsApp(navController: NavHostController = rememberNavController()) {
                 )
             }
         },
-        bottomBar = { BottomNavigationBar(navBackStackEntry, ::navigate) },
+        bottomBar = {
+            BottomNavigationBar(
+                navBackStackEntry,
+                ::navigate,
+                Modifier.testTag("navigation")
+            )
+        },
         containerColor = MaterialTheme.colorScheme.background
     ) {
         Column(

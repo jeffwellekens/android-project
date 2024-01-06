@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.testing.TestNavHostController
@@ -34,11 +35,14 @@ class DealsAppNavigationTest {
             navController.navigatorProvider.addNavigator(ComposeNavigator())
             DealsApp(navController = navController)
         }
+        /**
+         * Makes sure [navController] is initialized when we get to the tests.
+         */
+        composeTestRule.onNodeWithTag("navigation").assertExists()
     }
 
     @Test
     fun dealsAppNavHost_verifyStartDestination() {
-        composeTestRule.onNodeWithStringIdTag(R.string.deals_title).assertExists()
         navController.assertCurrentRouteName(NavigationItem.Deals.route)
     }
 

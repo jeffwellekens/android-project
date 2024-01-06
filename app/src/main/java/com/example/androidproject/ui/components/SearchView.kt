@@ -57,7 +57,12 @@ fun SearchView(
             containerColor = MaterialTheme.colorScheme.surface,
             textColor = MaterialTheme.colorScheme.onSurfaceVariant
         ),
-        placeholder = { Text(text = "Search deals", color = MaterialTheme.colorScheme.onSurfaceVariant) },
+        placeholder = {
+            Text(
+                text = "Search deals",
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        },
         textStyle = MaterialTheme.typography.bodyLarge,
         singleLine = true,
         keyboardOptions = KeyboardOptions(
@@ -76,5 +81,6 @@ fun SearchViewPreview() {
         query = "Test",
         onQueryChanged = { },
         onSearch = { },
-        onClearQuery = { })
+        onClearQuery = { },
+    )
 }
