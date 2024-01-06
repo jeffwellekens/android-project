@@ -17,7 +17,7 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.example.androidproject.HiltTestRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -63,7 +63,10 @@ kapt {
 dependencies {
     // Dagger hilt
     kapt("com.google.dagger:hilt-android-compiler:2.44")
-    implementation("com.google.dagger:hilt-android-testing:2.44")
+    // For instrumented tests.
+    androidTestImplementation("com.google.dagger:hilt-android-testing:2.44")
+    // ...with Kotlin.
+    kaptAndroidTest("com.google.dagger:hilt-android-compiler:2.44")
     // Room
     kapt ("androidx.room:room-compiler:2.5.1")
     implementation ("androidx.room:room-ktx:2.5.1")

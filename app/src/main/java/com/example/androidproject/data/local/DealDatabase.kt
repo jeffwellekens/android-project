@@ -5,7 +5,8 @@ import androidx.room.RoomDatabase
 
 @Database(
     entities = [DealEntity::class],
-    version = 1
+    version = 1,
+    exportSchema = false
 )
 abstract class DealDatabase: RoomDatabase() {
     abstract val dao: DealDao

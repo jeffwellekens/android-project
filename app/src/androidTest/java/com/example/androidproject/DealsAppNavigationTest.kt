@@ -1,35 +1,44 @@
 package com.example.androidproject
 
-import androidx.activity.ComponentActivity
+import android.util.Log
+import androidx.activity.compose.setContent
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.performClick
 import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.testing.TestNavHostController
 import com.example.androidproject.ui.components.navigation.NavigationItem
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
+@HiltAndroidTest
 class DealsAppNavigationTest {
 
-    @get:Rule
-    val composeTestRule = createAndroidComposeRule<ComponentActivity>()
+    @get:Rule(order = 0)
+    var hiltRule = HiltAndroidRule(this)
+
+    @get:Rule(order = 1)
+    val composeTestRule = createAndroidComposeRule<MainActivity>()
 
     private lateinit var navController: TestNavHostController
 
     @Before
     fun setupDealsAppNavHost() {
-        composeTestRule.setContent {
-            navController = TestNavHostController(LocalContext.current).apply {
-                navigatorProvider.addNavigator(ComposeNavigator())
-            }
+        hiltRule.inject()
+
+        composeTestRule.activity.setContent {
+            navController = TestNavHostController(LocalContext.current)
+            navController.navigatorProvider.addNavigator(ComposeNavigator())
             DealsApp(navController = navController)
         }
     }
 
     @Test
     fun dealsAppNavHost_verifyStartDestination() {
+        composeTestRule.onNodeWithStringIdTag(R.string.deals_title).assertExists()
         navController.assertCurrentRouteName(NavigationItem.Deals.route)
     }
 
