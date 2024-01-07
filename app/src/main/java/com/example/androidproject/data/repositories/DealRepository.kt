@@ -20,14 +20,40 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
+/**
+ * Repository interface defining methods for dealing with deals and their details.
+ */
 interface DealRepository {
+    /**
+     * Get a Flow of [PagingData] containing deals from the local database and remote API.
+     *
+     * @param query Optional search query for filtering deals by title.
+     * @return A [Flow] of [PagingData] containing [DealEntity] objects.
+     */
     fun getDeals(query: MutableState<String>? = null): Flow<PagingData<DealEntity>>
 
+    /**
+     * Get a Flow of [DealDetail] for a specific deal ID.
+     *
+     * @param dealId The unique identifier of the deal.
+     * @return A [Flow] emitting the [DealDetail] for the specified deal ID.
+     */
     fun getDealByDealId(dealId: String): Flow<DealDetail>
 
+    /**
+     * Insert the details of a deal with the specified deal ID into the local database.
+     *
+     * @param dealId The unique identifier of the deal.
+     */
     suspend fun insertDealDetailByDealId(dealId: String)
 }
 
+/**
+ * Offline implementation of [DealRepository] that utilizes local database and remote API.
+ *
+ * @property dealService Retrofit service for interacting with the remote deal API.
+ * @property dealDatabase Local Room database instance for dealing with DealEntity and DealDetailEntity.
+ */
 class OfflineDealRepository @Inject constructor(
     private val dealService: DealService,
     private val dealDatabase: DealDatabase
@@ -52,6 +78,9 @@ class OfflineDealRepository @Inject constructor(
         ).flow
     }
 
+    /**
+     * Get a Flow of [DealDetail] for a specific deal ID.
+     */
     override fun getDealByDealId(dealId: String): Flow<DealDetail> {
         return dealDatabase.dealDetailDao.getDealDetail(dealId).map { dealDetail ->
             //This is null when it's the first time it's getting called from the api after it is not null anymore
@@ -60,6 +89,9 @@ class OfflineDealRepository @Inject constructor(
         }
     }
 
+    /**
+     * Insert the details of a deal with the specified deal ID into the local database.
+     */
     override suspend fun insertDealDetailByDealId(dealId: String) {
         withContext(Dispatchers.IO) {
             if (!dealDatabase.dealDetailDao.dealDetailExists(dealId)) {

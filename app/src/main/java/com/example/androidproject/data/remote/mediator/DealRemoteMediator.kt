@@ -13,12 +13,26 @@ import com.example.androidproject.data.remote.api.DealService
 import retrofit2.HttpException
 import java.io.IOException
 
+/**
+ * Remote mediator for loading deals from the remote API into the local database.
+ *
+ * @param query Optional search query for filtering deals by title.
+ * @param dealDb Local Room database instance for dealing with DealEntity.
+ * @param dealService Retrofit service for interacting with the remote deal API.
+ */
 @OptIn(ExperimentalPagingApi::class)
 class DealRemoteMediator(
     private val query: MutableState<String>? = null,
     private val dealDb: DealDatabase,
     private val dealService: DealService
 ) : RemoteMediator<Int, DealEntity>() {
+    /**
+     * Load method to fetch deals from the remote API based on the load type and current paging state.
+     *
+     * @param loadType The type of data load: REFRESH, PREPEND, or APPEND.
+     * @param state The current paging state containing information about the loaded data.
+     * @return A [MediatorResult] indicating the result of the data loading operation.
+     */
     override suspend fun load(
         loadType: LoadType,
         state: PagingState<Int, DealEntity>

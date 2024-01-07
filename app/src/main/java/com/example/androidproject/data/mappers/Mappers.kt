@@ -170,3 +170,78 @@ fun ImagesDto.toImagesEntity(): ImagesEntity {
         icon = icon
     )
 }
+
+fun Deal.toDealEntity(): DealEntity {
+    return DealEntity(
+        dealID = dealID,
+        dealRating = dealRating,
+        gameID = gameID,
+        isOnSale = isOnSale,
+        metacriticScore = metacriticScore,
+        steamRatingText = steamRatingText,
+        normalPrice = normalPrice,
+        salePrice = salePrice,
+        storeID = storeID,
+        thumb = thumb ?: "",
+        title = title
+    )
+}
+
+fun DealDetail.toDealDetailEntity(dealId: String): DealDetailEntity {
+    return DealDetailEntity(
+        dealId = dealId,
+        gameInfo = gameInfo.toGameInfoEntity(),
+        cheaperStores = cheaperDealStores.map {it.toDealStoreEntity()},
+        cheapestPrice = cheapestPrice.toCheapestPriceEntity()
+    )
+}
+
+fun GameInfo.toGameInfoEntity(): GameInfoEntity {
+    return GameInfoEntity(
+        storeID = storeID,
+        gameID = gameID,
+        name = name,
+        steamAppID = steamAppID,
+        salePrice = salePrice,
+        retailPrice = retailPrice,
+        steamRatingText = steamRatingText,
+        steamRatingPercent = steamRatingPercent,
+        metacriticScore = metacriticScore,
+        releaseDate = releaseDate,
+        publisher = publisher,
+        thumb = thumb,
+    )
+}
+
+fun DealStore.toDealStoreEntity(): DealStoreEntity {
+    return DealStoreEntity(
+        dealID = dealID,
+        storeID = storeID,
+        salePrice = salePrice,
+        retailPrice = retailPrice,
+    )
+}
+
+fun CheapestPrice.toCheapestPriceEntity(): CheapestPriceEntity {
+    return CheapestPriceEntity(
+        price = price ?: "N/A",
+        date = date
+    )
+}
+
+fun Store.toStoreEntity(): StoreEntity {
+    return StoreEntity(
+        storeID = storeId,
+        storeName = storeName,
+        isActive = isActive,
+        images = images.toImagesEntity()
+    )
+}
+
+fun Images.toImagesEntity(): ImagesEntity {
+    return ImagesEntity(
+        banner = banner,
+        logo = logo,
+        icon = icon
+    )
+}

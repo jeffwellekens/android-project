@@ -1,9 +1,10 @@
 plugins {
+    kotlin("kapt")
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.dagger.hilt.android")
     id("org.jetbrains.kotlin.plugin.serialization") version "1.8.10"
-    kotlin("kapt")
+    id("org.jetbrains.dokka") version "1.9.10"
 }
 
 android {
@@ -61,6 +62,7 @@ kapt {
 }
 
 dependencies {
+    dokkaPlugin("org.jetbrains.dokka:android-documentation-plugin:1.9.10")
     implementation("com.google.code.gson:gson:2.10.1")
     // Dagger hilt
     kapt("com.google.dagger:hilt-android-compiler:2.44")
