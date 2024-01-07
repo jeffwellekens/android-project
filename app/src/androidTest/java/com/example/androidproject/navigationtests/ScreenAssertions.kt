@@ -1,4 +1,4 @@
-package com.example.androidproject
+package com.example.androidproject.navigationtests
 
 import androidx.navigation.NavController
 import org.junit.Assert.assertEquals

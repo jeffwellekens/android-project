@@ -1,4 +1,4 @@
-package com.example.androidproject
+package com.example.androidproject.navigationtests
 
 import androidx.activity.compose.setContent
 import androidx.compose.ui.platform.LocalContext
@@ -7,9 +7,15 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.testing.TestNavHostController
+import com.example.androidproject.DealsApp
+import com.example.androidproject.MainActivity
+import com.example.androidproject.R
+import com.example.androidproject.onNodeWithStringIdTag
 import com.example.androidproject.ui.components.navigation.BottomNavigationItem
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -34,14 +40,15 @@ class DealsAppNavigationTest {
             navController.navigatorProvider.addNavigator(ComposeNavigator())
             DealsApp(navController = navController)
         }
-        /**
-         * Makes sure [navController] is initialized when we get to the tests.
-         */
-        composeTestRule.onNodeWithTag("navigation").assertExists()
     }
 
     @Test
     fun dealsAppNavHost_verifyStartDestination() {
+        /**
+         * Makes sure [navController] is initialized when we get to the tests.
+         */
+        composeTestRule.onNodeWithTag("navigation").assertExists()
+
         navController.assertCurrentRouteName(BottomNavigationItem.Deals.route)
     }
 
