@@ -1,4 +1,4 @@
-package com.example.androidproject.ui.components.deal
+package com.example.androidproject.ui.components.store
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
@@ -14,16 +14,14 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.example.androidproject.domain.model.Deal
+import com.example.androidproject.domain.model.Store
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DealItem(deal: Deal, storeName: String, modifier: Modifier? = Modifier) {
+fun StoreItem(store: Store, modifier: Modifier? = Modifier) {
     ListItem(
         modifier = modifier!!,
-        headlineText = { Text(deal.title) },
-        overlineText = { Text(storeName) },
-        supportingText = { Text("Deal rating: ${deal.dealRating}") },
+        headlineText = { Text(store.storeName) },
         leadingContent = {
             AsyncImage(
                 modifier = Modifier
@@ -31,17 +29,11 @@ fun DealItem(deal: Deal, storeName: String, modifier: Modifier? = Modifier) {
                     .width(56.dp),
                 contentScale = ContentScale.Fit,
                 alignment = Alignment.Center,
-                model = deal.thumb,
-                contentDescription = "Game thumbnail"
+                model = "https://www.cheapshark.com/${store.images.logo}",
+                contentDescription = "Store logo"
             )
 
         },
-        trailingContent = {
-            Column {
-                Text(deal.normalPrice, textDecoration = TextDecoration.LineThrough)
-                Text(deal.salePrice)
-            }
-        }
     )
     Divider()
 }

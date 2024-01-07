@@ -4,14 +4,23 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,18 +33,18 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.example.androidproject.ui.components.SearchView
+import com.example.androidproject.ui.components.search.SearchView
 import com.example.androidproject.ui.components.navigation.BottomNavigationBar
 import com.example.androidproject.ui.components.navigation.Navigation
 import com.example.androidproject.ui.theme.AppTheme
-import com.example.androidproject.ui.viewmodels.DealViewModel
+import com.example.androidproject.ui.viewmodels.DealsScreenViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DealsApp(navController: NavHostController = rememberNavController()) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val dealViewModel = hiltViewModel<DealViewModel>()
-    val deals = dealViewModel.dealPagingFlow.collectAsLazyPagingItems()
+    val dealsScreenViewModel = hiltViewModel<DealsScreenViewModel>()
+    val deals = dealsScreenViewModel.dealPagingFlow.collectAsLazyPagingItems()
     val currentSearchQuery = remember { mutableStateOf("") }
     fun navigate(route: String) {
         navController.navigate(route) {
@@ -50,55 +59,68 @@ fun DealsApp(navController: NavHostController = rememberNavController()) {
     }
 
     val focusManager = LocalFocusManager.current
-    Scaffold(
-        topBar = {
-            AnimatedVisibility(
-                visible = navBackStackEntry?.destination?.route == "deals",
-                enter = fadeIn(tween(700)),
-                exit = fadeOut(tween(700))
-            ) {
-                SearchView(
-                    query = dealViewModel.query.value,
-                    onQueryChanged = { dealViewModel.query.value = it },
-                    onClearQuery = {
-                        if (currentSearchQuery.value == "") {
-                            dealViewModel.setQuery("")
-                        } else {
-                            dealViewModel.setQuery("")
-                            deals.refresh()
-                        }
-                    },
-                    onSearch = {
-                        currentSearchQuery.value = dealViewModel.query.value
-                        deals.refresh()
-                        focusManager.clearFocus()
-                    },
-                    modifier = Modifier.fillMaxWidth()
+    val snackbarHostState = remember { SnackbarHostState() }
+    CompositionLocalProvider(LocalSnackbarHostState provides snackbarHostState) {
+        Scaffold(
+            topBar = {
+                AnimatedVisibility(
+                    visible = (navBackStackEntry?.destination?.route == "deals" || navBackStackEntry?.destination?.route?.startsWith(
+                        "dealDetail"
+                    ) == true),
+                    enter = fadeIn(tween(700)),
+                    exit = fadeOut(tween(700))
+                ) {
+                    if (navBackStackEntry?.destination?.route == "deals") {
+                        SearchView(
+                            query = dealsScreenViewModel.query.value,
+                            onQueryChanged = { dealsScreenViewModel.query.value = it },
+                            onClearQuery = {
+                                if (currentSearchQuery.value == "") {
+                                    dealsScreenViewModel.setQuery("")
+                                } else {
+                                    dealsScreenViewModel.setQuery("")
+                                    deals.refresh()
+                                }
+                            },
+                            onSearch = {
+                                currentSearchQuery.value = dealsScreenViewModel.query.value
+                                deals.refresh()
+                                focusManager.clearFocus()
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    } else {
+                        TopAppBar(title = { Text("Deal") },
+                            navigationIcon = {
+                                IconButton(onClick = { navController.popBackStack() }) {
+                                    Icon(Icons.Filled.ArrowBack, contentDescription = "Back arrow")
+                                }
+                            })
+                    }
+                }
+            },
+            bottomBar = {
+                BottomNavigationBar(
+                    navBackStackEntry,
+                    ::navigate,
+                    Modifier.testTag("navigation")
+                )
+            },
+            containerColor = MaterialTheme.colorScheme.background,
+            snackbarHost = { SnackbarHost(snackbarHostState) }
+        ) {
+            Column {
+                Navigation(
+                    navController = navController,
+                    deals = deals,
+                    modifier = Modifier.padding(paddingValues = it)
                 )
             }
-        },
-        bottomBar = {
-            BottomNavigationBar(
-                navBackStackEntry,
-                ::navigate,
-                Modifier.testTag("navigation")
-            )
-        },
-        containerColor = MaterialTheme.colorScheme.background
-    ) {
-        Column(
-            modifier = Modifier.padding(paddingValues = it)
-        ) {
-            Navigation(navController = navController, deals = deals)
         }
     }
+
 }
 
-
-@Preview
-@Composable
-fun DealsAppPreview() {
-    AppTheme {
-        DealsApp()
-    }
+val LocalSnackbarHostState = compositionLocalOf<SnackbarHostState> {
+    error("No Snackbar Host State provided")
 }

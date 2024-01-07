@@ -1,4 +1,4 @@
-package com.example.androidproject.ui.components
+package com.example.androidproject.ui.components.search
 
 
 import androidx.compose.foundation.text.KeyboardActions
@@ -54,7 +54,7 @@ fun SearchView(
         },
         maxLines = 1,
         colors = TextFieldDefaults.textFieldColors(
-            containerColor = MaterialTheme.colorScheme.surface,
+            containerColor = MaterialTheme.colorScheme.background,
             textColor = MaterialTheme.colorScheme.onSurfaceVariant
         ),
         placeholder = {

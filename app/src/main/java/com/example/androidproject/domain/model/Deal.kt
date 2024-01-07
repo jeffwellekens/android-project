@@ -1,4 +1,4 @@
-package com.example.androidproject.domain
+package com.example.androidproject.domain.model
 
 data class Deal(
     val dealID: String,
@@ -10,6 +10,6 @@ data class Deal(
     val isOnSale: String,
     val dealRating: String,
     val thumb: String?,
-    val steamRatingText: String? = null,
-    val metacriticScore: String? = null
+    val steamRatingText: String?,
+    val metacriticScore: String?
 )

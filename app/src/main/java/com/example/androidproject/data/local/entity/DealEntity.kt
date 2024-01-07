@@ -1,4 +1,4 @@
-package com.example.androidproject.data.local
+package com.example.androidproject.data.local.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -16,6 +16,6 @@ data class DealEntity (
     val isOnSale: String,
     val dealRating: String,
     val thumb: String,
-    val steamRatingText: String? = null,
-    val metacriticScore: String? = null
+    val steamRatingText: String?,
+    val metacriticScore: String?
 )

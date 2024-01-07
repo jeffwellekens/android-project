@@ -1,42 +1,33 @@
 package com.example.androidproject.ui.screens
 
-import android.widget.Toast
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemKey
-import com.example.androidproject.domain.Deal
+import com.example.androidproject.domain.model.Deal
 import com.example.androidproject.ui.components.deal.DealItem
 import com.example.androidproject.ui.theme.AppTheme
+import com.example.androidproject.ui.viewmodels.StoreScreenViewModel
+import kotlinx.coroutines.flow.collect
 
 @Composable
 fun DealsScreen(
-    deals: LazyPagingItems<Deal>
+    deals: LazyPagingItems<Deal>,
+    navigateTo: (String) -> Unit,
+    modifier: Modifier? = Modifier,
+    storeScreenViewModel: StoreScreenViewModel = hiltViewModel(),
 ) {
-    val context = LocalContext.current
-    LaunchedEffect(key1 = deals.loadState) {
-        if (deals.loadState.refresh is LoadState.Error) {
-            Toast.makeText(
-                context,
-                "Error: " + (deals.loadState.refresh as LoadState.Error).error.message,
-                Toast.LENGTH_LONG
-            ).show()
-        }
-    }
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = modifier!!.fillMaxSize()) {
         if (deals.loadState.refresh is LoadState.Loading) {
             CircularProgressIndicator(
                 modifier = Modifier.align(Alignment.Center)
@@ -44,7 +35,6 @@ fun DealsScreen(
         } else {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 items(
@@ -52,9 +42,14 @@ fun DealsScreen(
                     key = deals.itemKey { deal -> deal.dealID }) { index ->
                     index.let {
                         val deal = deals[it]
+                        val storeName = storeScreenViewModel.uiState.value.stores?.find { store -> store.storeId == deal!!.storeID }?.storeName
                         if (deal != null) {
                             DealItem(
-                                deal = deal
+                                deal = deal,
+                                storeName = storeName!!,
+                                Modifier.clickable {
+                                    navigateTo("dealDetail/${deal.dealID}")
+                                }
                             )
                         }
                     }

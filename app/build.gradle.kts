@@ -61,6 +61,7 @@ kapt {
 }
 
 dependencies {
+    implementation("com.google.code.gson:gson:2.10.1")
     // Dagger hilt
     kapt("com.google.dagger:hilt-android-compiler:2.44")
     // For instrumented tests.

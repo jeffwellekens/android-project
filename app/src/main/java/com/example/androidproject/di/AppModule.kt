@@ -2,14 +2,15 @@ package com.example.androidproject.di
 
 import android.content.Context
 import androidx.paging.ExperimentalPagingApi
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
 import androidx.room.Room
-import com.example.androidproject.data.DealRepository
-import com.example.androidproject.data.local.DealDatabase
-import com.example.androidproject.data.local.DealEntity
-import com.example.androidproject.data.remote.DealRemoteMediator
-import com.example.androidproject.data.remote.DealService
+import com.example.androidproject.data.repositories.DealRepository
+import com.example.androidproject.data.repositories.OfflineDealRepository
+import com.example.androidproject.data.local.database.DealDatabase
+import com.example.androidproject.data.local.database.StoreDatabase
+import com.example.androidproject.data.remote.api.DealService
+import com.example.androidproject.data.remote.api.StoreService
+import com.example.androidproject.data.repositories.OfflineStoreRepository
+import com.example.androidproject.data.repositories.StoreRepository
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
@@ -20,7 +21,6 @@ import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
 import retrofit2.create
-import javax.inject.Inject
 import javax.inject.Singleton
 
 @OptIn(ExperimentalPagingApi::class)
@@ -52,9 +52,33 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideDealRepository(dealDb: DealDatabase, dealService: DealService): DealRepository {
-        return DealRepository(dealService, dealDb)
+    fun provideDealRepository(dealDb: DealDatabase, dealService: DealService): DealRepository =
+        OfflineDealRepository(dealService, dealDb)
+
+    @Provides
+    @Singleton
+    fun provideStoreDatabase(@ApplicationContext context: Context): StoreDatabase {
+        return Room.databaseBuilder(
+            context,
+            StoreDatabase::class.java,
+            "stores.db"
+        ).build()
     }
+
+    @Provides
+    @Singleton
+    fun provideStoreService(): StoreService {
+        return Retrofit.Builder()
+            .baseUrl(StoreService.BASE_URL)
+            .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
+            .build()
+            .create()
+    }
+    @Provides
+    @Singleton
+    fun provideStoreRepository(storeDb: StoreDatabase, storeService: StoreService): StoreRepository =
+        OfflineStoreRepository(storeService, storeDb)
+
 //    @Provides
 //    @Singleton
 //    fun provideDealPager(dealDb: DealDatabase, dealService: DealService): Pager<Int, DealEntity> {

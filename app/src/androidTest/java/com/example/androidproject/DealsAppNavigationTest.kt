@@ -1,6 +1,5 @@
 package com.example.androidproject
 
-import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
@@ -8,7 +7,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.testing.TestNavHostController
-import com.example.androidproject.ui.components.navigation.NavigationItem
+import com.example.androidproject.ui.components.navigation.BottomNavigationItem
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before
@@ -43,18 +42,12 @@ class DealsAppNavigationTest {
 
     @Test
     fun dealsAppNavHost_verifyStartDestination() {
-        navController.assertCurrentRouteName(NavigationItem.Deals.route)
-    }
-
-    @Test
-    fun dealsAppNavHost_clickOnGamesIcon_navigateToGamesScreen() {
-        composeTestRule.onNodeWithStringIdTag(R.string.games_title).performClick()
-        navController.assertCurrentRouteName(NavigationItem.Games.route)
+        navController.assertCurrentRouteName(BottomNavigationItem.Deals.route)
     }
 
     @Test
     fun dealsAppNavHost_clickOnStoresIcon_navigateToGamesScreen() {
         composeTestRule.onNodeWithStringIdTag(R.string.stores_title).performClick()
-        navController.assertCurrentRouteName(NavigationItem.Stores.route)
+        navController.assertCurrentRouteName(BottomNavigationItem.Stores.route)
     }
 }

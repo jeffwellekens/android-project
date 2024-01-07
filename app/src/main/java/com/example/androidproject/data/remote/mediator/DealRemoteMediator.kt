@@ -1,15 +1,15 @@
-package com.example.androidproject.data.remote
+package com.example.androidproject.data.remote.mediator
 
-import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
-import com.example.androidproject.data.local.DealDatabase
-import com.example.androidproject.data.local.DealEntity
+import com.example.androidproject.data.local.database.DealDatabase
+import com.example.androidproject.data.local.entity.DealEntity
 import com.example.androidproject.data.mappers.toDealEntity
+import com.example.androidproject.data.remote.api.DealService
 import retrofit2.HttpException
 import java.io.IOException
 
@@ -46,10 +46,10 @@ class DealRemoteMediator(
             )
             dealDb.withTransaction {
                 if (loadType == LoadType.REFRESH) {
-                    dealDb.dao.clearAll()
+                    dealDb.dealDao.clearAll()
                 }
                 val dealEntities = deals.map { it.toDealEntity() }
-                dealDb.dao.upsertAll(dealEntities)
+                dealDb.dealDao.upsertAll(dealEntities)
             }
             MediatorResult.Success(
                 endOfPaginationReached = deals.isEmpty()

@@ -1,9 +1,10 @@
-package com.example.androidproject.data.local
+package com.example.androidproject.data.local.dao
 
 import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Upsert
+import com.example.androidproject.data.local.entity.DealEntity
 
 @Dao
 interface DealDao {

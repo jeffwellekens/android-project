@@ -9,25 +9,32 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavBackStackEntry
-import com.example.androidproject.ui.theme.AppTheme
 
 @Composable
-fun BottomNavigationBar(navBackStackEntry: NavBackStackEntry?, navigate: (String) -> Unit, modifier : Modifier? = Modifier) {
+fun BottomNavigationBar(
+    navBackStackEntry: NavBackStackEntry?,
+    navigate: (String) -> Unit,
+    modifier: Modifier? = Modifier
+) {
     val items = listOf(
-        NavigationItem.Deals,
-        NavigationItem.Games,
-        NavigationItem.Stores
+        BottomNavigationItem.Deals,
+        BottomNavigationItem.Stores
     )
     NavigationBar(modifier = modifier!!) {
         val currentRoute = navBackStackEntry?.destination?.route
         items.forEach { item ->
             NavigationBarItem(
-                modifier = Modifier.testTag(item.title.asString()) ,
-                selected = currentRoute == item.route,
-                icon = { Icon(item.icon, contentDescription = "navigate to ${item.title.asString()}") },
+                modifier = Modifier.testTag(item.title.asString()),
+                selected = (currentRoute == item.route || (item.route == "deals" && currentRoute?.startsWith("dealDetail") == true)),
+                icon = {
+                    Icon(
+                        item.icon,
+                        contentDescription = "navigate to ${item.title.asString()}"
+                    )
+                },
                 label = { Text(text = item.title.asString()) },
                 onClick = {
-                          navigate(item.route)
+                    navigate(item.route)
                 },
             )
         }
